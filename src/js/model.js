@@ -1,6 +1,5 @@
 import { getJSON } from "./helper";
 import { API_URL, RES_PER_PAGE } from "./config";
-import { async } from "regenerator-runtime";
 
 export const state = {
     recipe: {},
@@ -10,6 +9,7 @@ export const state = {
         page: 1,
         resultPerPage: RES_PER_PAGE,
     },
+    bookmark: [],
 }
 
 export const loadRecipe = async function (id) {
@@ -30,6 +30,10 @@ export const loadRecipe = async function (id) {
             cookingTime: recipe.cooking_time,
             ingredients: recipe.ingredients,
         }
+
+        if (state.bookmark.some(b => b.id === id)) state.recipe.bookmarked = true;
+        else state.recipe.bookmarked = false;
+
     } catch (err) {
         throw err;
     }
@@ -52,7 +56,7 @@ export const loadSearchResults = async function (query) {
             }
         });
 
-        // console.log(state.search.result);
+        state.search.page = 1;
 
     } catch (err) {
         console.log(err);
@@ -70,3 +74,48 @@ export const getSearchResultsPage = function (page = state.search.page) {
 
     return state.search.result.slice(start, end);
 }
+
+export const updateServings = function (newServing) {
+
+    state.recipe.ingredients.forEach(ing => {
+        ing.quantity = ing.quantity * (newServing / state.recipe.servings);
+    });
+
+    state.recipe.servings = newServing;
+}
+
+const persistBookmark = function () {
+    localStorage.setItem("bookmarks", JSON.stringify(state.bookmark));
+}
+
+export const addBookmark = function (recipe) {
+
+    state.bookmark.push(recipe);
+
+    if (recipe.id === state.recipe.id) state.recipe.bookmarked = true;
+
+    persistBookmark();
+}
+
+export const deleteBookmark = function (id) {
+
+    const index = state.bookmark.findIndex(b => b.id === id);
+
+    state.bookmark.splice(index, 1);
+
+    if (state.recipe.id === id) state.recipe.bookmarked = false;
+
+    persistBookmark();
+}
+
+const init = function () {
+    const storage = localStorage.getItem("bookmarks");
+    if (storage) state.bookmark = JSON.parse(storage);
+}
+init();
+
+const clearBookmark = function () {
+    localStorage.clear("bookmarks");
+}
+
+// clearBookmark();
