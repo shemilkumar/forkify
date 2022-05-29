@@ -18,6 +18,7 @@ import { CLOSE_MOD_SEC } from './config.js';
 //   module.hot.accept();
 // }
 
+
 const controlRecipes = async function () {
 
   try {
@@ -39,6 +40,7 @@ const controlRecipes = async function () {
 
   } catch (err) {
     recipeView.renderError();
+    console.log(err);
   }
 }
 
@@ -141,4 +143,4 @@ const init = function () {
   paginationView.addHandlerClick(controlPagination);
   addRecipeView.addHandlerUpload(controllAddRecipe);
 }
-init();
+init(); 
