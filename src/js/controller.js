@@ -1,16 +1,15 @@
 import * as model from './model.js';
-import './views/recipeView.js';
-
-import 'core-js/stable';
-import 'regenerator-runtime/runtime';
+import { CLOSE_MOD_SEC } from './config.js';
 import recipeView from './views/recipeView.js';
 import searchView from './views/searchView';
 import resultView from './views/resultView';
 import paginationView from './views/paginationView';
 import bookmarkView from './views/bookmarkView.js';
 import addRecipeView from './views/addRecipeView.js';
-import { CLOSE_MOD_SEC } from './config.js';
 
+import 'core-js/stable';
+import 'regenerator-runtime/runtime';
+import { async } from 'regenerator-runtime';
 
 // https://forkify-api.herokuapp.com/v2
 
